@@ -1,0 +1,7 @@
+Todos os dados desta pasta sao ficticios. Nenhum arquivo e extrato real ou documento fiscal valido.
+
+1. Importe conta-exemplo.ofx e cartao-exemplo.ofx.
+2. Reimporte os mesmos arquivos: nenhuma nova transacao deve aparecer.
+3. Importe nota-mercado.xml.
+4. Vincule a nota a compra de R$ 252,91 em 09/09/2026.
+5. Confira que as despesas de setembro continuam iguais.

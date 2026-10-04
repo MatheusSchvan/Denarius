@@ -1,0 +1,61 @@
+/* A aparência clara original continua como padrão. */
+:root { color-scheme: light; }
+.theme-picker { display: flex; align-items: center; gap: 9px; font-size: 12px; }
+.theme-picker select { padding: 5px 9px; }
+.report-help { margin-bottom: 18px; }
+.report-paper { overflow-x: auto; background: #fff; border: 1px solid var(--line); border-radius: 7px; margin-bottom: 22px; }
+.report-paper svg { display: block; width: 100%; height: auto; min-width: 640px; }
+.report-values summary { cursor: pointer; padding: 18px 24px; }
+.report-values caption { text-align: left; padding: 15px 24px; font-weight: 600; }
+.report-tools .toolbar-actions { flex-wrap: wrap; justify-content: flex-start; }
+
+:root[data-theme="dark"] { color-scheme: dark; color: #e0e8e2; background: #131b17; --green: #9bcbb0; --muted: #a6b5aa; --line: #34483b; --clay: #dfac93; }
+[data-theme="dark"] :is(.sidebar,.panel,.stat,.welcome,.modal,.modal-head) { background: #1c2821; color: #e0e8e2; border-color: var(--line); }
+[data-theme="dark"] :is(.topbar,.modal-actions,th) { background: #17221c; color: #afbeb2; border-color: var(--line); }
+[data-theme="dark"] :is(td,.pagination,.review-row,.trend-chart) { border-color: var(--line); }
+[data-theme="dark"] tbody tr:hover { background: #27372d; }
+[data-theme="dark"] :is(.nav-item,.backup-link,.review-row,.category-name,.stat-label,.description-cell,.file-title,.file-title strong,.import-counts strong,.empty h3) { color: #d0ded3; }
+[data-theme="dark"] :is(.brand-sub,.nav-caption,.version,.local-label,.eyebrow,.page-footer,.panel-heading p,.stat-note,.metrics-note,.review-row small,.trend-column>span:not(.sr-only),.chart-key,.footnote,.row-secondary,.record-count,.checkbox,.pagination,.welcome p,.loading,.empty,.empty>svg,.upload-layout p,.help-text,.import-tip,.import-counts,.file-preview summary,.receipt-explainer p,.modal-head p,.optional,.transaction-summary>span,.receipt-summary p,.candidate small,.linked-note p) { color: #a6b5aa; }
+[data-theme="dark"] :is(.nav-item:hover,.nav-item.active,.stat.result,.stat-icon,.result .stat-icon,.count-box,.upload-icon,.receipt-explainer,.receipt-explainer-icon,.transaction-summary,.candidate.selected,.linked-note,.quiet-empty) { background: #283f30; border-color: #47654e; color: #c6e5cc; }
+[data-theme="dark"] :is(.result strong,.category-name strong,.receipt-explainer h2,.linked-note>div) { color: #c6e5cc; }
+[data-theme="dark"] :is(.bar-track,.icon-button:hover:not(:disabled)) { background: #34483b; }
+[data-theme="dark"] .stat-icon.clay { background: #49362b; color: #efbba0; }
+[data-theme="dark"] .brand-mark { color: #14271a; }
+[data-theme="dark"] .button { background: #9bcbb0; border-color: #9bcbb0; color: #12251a; }
+[data-theme="dark"] .button:hover:not(:disabled) { background: #b6dcc4; }
+[data-theme="dark"] .button.secondary { background: #24352a; border-color: #4f6756; color: #d6e5d9; }
+[data-theme="dark"] .button.secondary:hover:not(:disabled) { background: #304a39; }
+[data-theme="dark"] .button.danger { background: #432920; color: #ffcebc; border-color: #815346; }
+[data-theme="dark"] .button.danger:hover:not(:disabled) { background: #5a3429; }
+[data-theme="dark"] .text-button:hover { color: #c4efd3; }
+[data-theme="dark"] .icon-button { color: #b5c6b9; }
+[data-theme="dark"] :is(.search-field,input:not([type="checkbox"]):not([type="radio"]),select,textarea) { background: #152019; color: #e0e8e2; border-color: #4e6555; }
+[data-theme="dark"] :is(input,textarea)::placeholder { color: #91a396; }
+[data-theme="dark"] input[type="date"] { color-scheme: dark; }
+[data-theme="dark"] .inline-select { border-color: #4e6555!important; }
+[data-theme="dark"] .badge { background: #2d4833; color: #c0e2c6; }
+[data-theme="dark"] .badge.neutral { background: #354137; color: #d2dfd4; }
+[data-theme="dark"] :is(.badge.amber,.warning) { background: #413821; color: #ecd59b; border-color: #6c5d32; }
+[data-theme="dark"] .pending-row { background: #302b1d; }
+[data-theme="dark"] .notice { background: #263f2d; color: #c5e2c6; border-color: #4c6b52; }
+[data-theme="dark"] .error { background: #442a23; color: #ffcebc; border-color: #805648; }
+[data-theme="dark"] .candidate { border-color: #4e6555; }
+[data-theme="dark"] .modal::backdrop { background: #000a; }
+[data-theme="dark"] :is(button,a,input,select,textarea,summary):focus-visible { outline-color: #b5dec1; }
+
+@media(max-width:600px) {
+  .sidebar nav { overflow-x: auto; }
+  .nav-item { min-width: 76px; }
+  .topbar { height: 50px; gap: 10px; }
+  .theme-picker { font-size: 10px; gap: 5px; }
+  .theme-picker select { font-size: 11px; }
+}
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  :root[data-theme],body { background: #fff!important; color: #000!important; }
+  .sidebar,.topbar,.page-heading,.notice,.error,.page-footer,.report-tools,.report-help,.report-values { display: none!important; }
+  .app-shell,.workspace,main { display: block; width: 100%; margin: 0; padding: 0; max-width: none; }
+  .report-paper { border: 0; border-radius: 0; margin: 0; overflow: visible; }
+  .report-paper svg { min-width: 0; width: 100%; height: 260mm; }
+  .reports { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
