@@ -1,10 +1,10 @@
 # Validação da parte 3
 
-Foram executados 30 testes automatizados da API, com bases temporárias. Incluem importação, deduplicação, conciliação, saldos, migração da parte 1, exclusão, restauração e backup. O novo teste verifica que o CSV mensal contém apenas registros ativos daquele mês, mantém o valor de despesas do resumo, rejeita mês inválido e preserva a exportação completa sem filtro.
+Foram executados 32 testes automatizados da API, com bases temporárias. Incluem importação, deduplicação, conciliação, saldos, migração da parte 1, exclusão, restauração e backup. O CSV mensal contém apenas registros ativos daquele mês, mantém o valor de despesas do resumo, rejeita mês inválido e preserva a exportação completa sem filtro. Os testes adicionais verificam a senha do modo online, o carregamento dos exemplos, a proteção das alterações contra outras origens e a falha segura sem senha.
 
 O TypeScript foi verificado e a interface foi compilada com `npm run build`. O componente SVG do relatório foi renderizado com os dados fictícios de setembro de 2026 e sua imagem foi inspecionada: os totais são R$ 3.850,00 de entradas, R$ 1.985,41 de despesas e R$ 1.864,59 de resultado.
 
-O navegador de teste remoto não conseguiu acessar o servidor local. Portanto, a interação com o seletor de tema, o download PNG pelo navegador e a impressão/PDF ainda precisam da conferência local abaixo. A renderização inspecionada do SVG não substitui esse teste de download.
+O navegador de teste remoto não conseguiu acessar o servidor local. Portanto, a interação com o seletor de tema, o download PNG pelo navegador e a impressão/PDF ainda precisam da conferência local abaixo. A renderização inspecionada do SVG não substitui esse teste de download. O build Docker também precisa ser conferido em um computador com Docker ou no primeiro deploy do Render.
 
 ## Conferência rápida antes da apresentação
 

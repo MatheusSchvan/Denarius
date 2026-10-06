@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: financeiro-pessoal-demo
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: FINANCEIRO_DEMO_MODE
+        value: "1"
+      - key: FINANCEIRO_DEMO_USER
+        value: demo
+      - key: FINANCEIRO_DEMO_PASSWORD
+        sync: false
+      - key: FINANCEIRO_DATA_DIR
+        value: /tmp/financeiro-demo

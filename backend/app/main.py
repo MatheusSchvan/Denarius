@@ -1,7 +1,11 @@
 import csv
+import base64
+import binascii
 import io
 import logging
+import os
 import re
+import secrets
 import sqlite3
 import uuid
 from contextlib import asynccontextmanager
@@ -27,17 +31,48 @@ Kind = Literal['income', 'expense', 'transfer', 'investment', 'adjustment']
 @asynccontextmanager
 async def lifespan(app):
     initialize()
+    if os.getenv("FINANCEIRO_DEMO_MODE") == "1":
+        password = os.getenv("FINANCEIRO_DEMO_PASSWORD", "")
+        host = os.getenv("RENDER_EXTERNAL_HOSTNAME", "")
+        if len(password) < 14 or not host or not re.fullmatch(r"[A-Za-z0-9.-]+", host):
+            raise RuntimeError("O modo de demonstração precisa de FINANCEIRO_DEMO_PASSWORD (14+ caracteres) e RENDER_EXTERNAL_HOSTNAME.")
+        with connection() as db:
+            db.execute("BEGIN IMMEDIATE")
+            if not db.execute("SELECT 1 FROM transactions LIMIT 1").fetchone() and not db.execute("SELECT 1 FROM receipts LIMIT 1").fetchone():
+                seed_demo(db)
     yield
 
 
 app = FastAPI(title="Financeiro pessoal", version="0.3.0", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url="/api/openapi.json")
-app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost"])
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", os.getenv("RENDER_EXTERNAL_HOSTNAME", "localhost")])
+
+
+def demo_authenticated(header: str | None) -> bool:
+    if not header or len(header) > 2048 or not header.startswith("Basic "):
+        return False
+    try:
+        raw = base64.b64decode(header[6:], validate=True).decode("utf-8")
+    except (UnicodeError, ValueError, binascii.Error):
+        return False
+    user, separator, password = raw.partition(":")
+    return bool(separator) and secrets.compare_digest(user, os.getenv("FINANCEIRO_DEMO_USER", "demo")) and secrets.compare_digest(password, os.environ["FINANCEIRO_DEMO_PASSWORD"])
 
 
 @app.middleware("http")
 async def local_request(request: Request, call_next):
+    public_demo = os.getenv("FINANCEIRO_DEMO_MODE") == "1"
+    if public_demo and request.url.path != "/api/health" and not demo_authenticated(request.headers.get("authorization")):
+        return JSONResponse({"detail": "Acesso à demonstração restrito."}, status_code=401,
+                            headers={"WWW-Authenticate": 'Basic realm="Financeiro Demo", charset="UTF-8"', "Cache-Control": "no-store"})
     origin = request.headers.get("origin")
     allowed = {"http://127.0.0.1:8765", "http://localhost:8765", "http://127.0.0.1:5173", "http://localhost:5173"}
+    if public_demo:
+        host = os.environ["RENDER_EXTERNAL_HOSTNAME"]
+        allowed = {"https://" + host}
+        if host == "localhost":
+            allowed.add("http://localhost:10000")
+        if request.method not in {"GET", "HEAD", "OPTIONS"} and origin not in allowed:
+            return JSONResponse({"detail": "Origem da requisição não permitida."}, status_code=403)
     if origin and origin not in allowed:
         return JSONResponse({"detail": "Origem da requisição não permitida."}, status_code=403)
     length = request.headers.get("content-length", "0")
@@ -151,6 +186,7 @@ def bootstrap():
         months = [r[0] for r in db.execute("SELECT DISTINCT substr(date,1,7) FROM transactions WHERE active=1 ORDER BY 1 DESC")]
         total = db.execute("SELECT count(*) FROM transactions WHERE active=1").fetchone()[0]
         return {"categories": CATEGORIES, "months": months, "transaction_count": total,
+                "demo_mode": os.getenv("FINANCEIRO_DEMO_MODE") == "1",
                 "banks": [r[0] for r in db.execute("SELECT DISTINCT bank FROM transactions WHERE active=1 ORDER BY bank")]}
 
 
@@ -355,10 +391,14 @@ def demo():
         db.execute("BEGIN IMMEDIATE")
         if db.execute("SELECT count(*) FROM transactions").fetchone()[0] or db.execute("SELECT count(*) FROM receipts").fetchone()[0]:
             raise HTTPException(409, "Use os exemplos apenas em uma base vazia, para não misturar dados fictícios com seus dados.")
-        for filename in ("conta-exemplo.ofx", "cartao-exemplo.ofx"):
-            import_ofx(db, (PROJECT_DIR / "exemplos" / filename).read_bytes(), filename)
-        save_receipt(db, (PROJECT_DIR / "exemplos" / "nota-mercado.xml").read_bytes(), "nota-mercado.xml")
+        seed_demo(db)
     return {"ok": True, "month": "2026-09"}
+
+
+def seed_demo(db):
+    for filename in ("conta-exemplo.ofx", "cartao-exemplo.ofx"):
+        import_ofx(db, (PROJECT_DIR / "exemplos" / filename).read_bytes(), filename)
+    save_receipt(db, (PROJECT_DIR / "exemplos" / "nota-mercado.xml").read_bytes(), "nota-mercado.xml")
 
 
 @app.get("/api/export.csv")

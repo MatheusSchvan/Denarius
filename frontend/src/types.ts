@@ -1,6 +1,6 @@
 export type Page = 'overview' | 'transactions' | 'imports' | 'receipts' | 'balances' | 'settings' | 'reports'
 export type Kind = 'income' | 'expense' | 'transfer' | 'investment' | 'adjustment'
-export type Bootstrap = { categories: string[]; months: string[]; banks: string[]; transaction_count: number }
+export type Bootstrap = { categories: string[]; months: string[]; banks: string[]; transaction_count: number; demo_mode: boolean }
 export type Transaction = {
   id: number; date: string; description: string; original_description: string;
   amount_cents: number; kind: Kind; category: string; bank: string;

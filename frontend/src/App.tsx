@@ -59,6 +59,7 @@ export default function App() {
     <div className="workspace">
       <header className="topbar"><span>Controle financeiro pessoal</span><label className="theme-picker">Tema<select aria-label="Tema" value={theme} onChange={e => setTheme(e.target.value as Theme)}><option value="light">Claro</option><option value="dark">Escuro</option><option value="system">Sistema</option></select></label></header>
       <main>
+        {bootstrap.data?.demo_mode && <div className="warning" role="status">Demonstração online com dados fictícios. As alterações podem sumir quando o serviço reiniciar. Use apenas arquivos de exemplo.</div>}
         <div className="page-heading"><div><div className="eyebrow">{page === 'overview' ? 'ACOMPANHAMENTO' : 'ORGANIZAÇÃO'}</div><h1>{current.label}</h1><p>{current.description}</p></div>
           {(page === 'overview' || page === 'transactions' || page === 'reports') && <label className="month-picker"><span className="sr-only">Mês de referência</span><select value={month} onChange={e => setMonth(e.target.value)}>{Array.from(new Set([today().slice(0, 7), month, ...(bootstrap.data?.months || [])])).sort().reverse().map(m => <option value={m} key={m}>{monthLabel(m)}</option>)}</select><ChevronDown size={15}/></label>}
         </div>
