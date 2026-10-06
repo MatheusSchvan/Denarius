@@ -9,7 +9,7 @@ services:
         value: "1"
       - key: FINANCEIRO_DEMO_USER
         value: demo
-      - key: Denarius123@
+      - key: Denarius123@4567
         sync: false
       - key: FINANCEIRO_DATA_DIR
         value: /tmp/financeiro-demo
