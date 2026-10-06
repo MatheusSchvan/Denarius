@@ -32,7 +32,7 @@ Kind = Literal['income', 'expense', 'transfer', 'investment', 'adjustment']
 async def lifespan(app):
     initialize()
     if os.getenv("FINANCEIRO_DEMO_MODE") == "1":
-        password = os.getenv("FINANCEIRO_DEMO_PASSWORD", "Denarius123@4567")
+        password = os.getenv("FINANCEIRO_DEMO_PASSWORD", "")
         host = os.getenv("RENDER_EXTERNAL_HOSTNAME", "financeiro-pessoal-demo.onrender.com")
         if len(password) < 14 or not host or not re.fullmatch(r"[A-Za-z0-9.-]+", host):
             raise RuntimeError("O modo de demonstração precisa de FINANCEIRO_DEMO_PASSWORD (14+ caracteres) e RENDER_EXTERNAL_HOSTNAME.")
