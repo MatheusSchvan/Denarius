@@ -268,5 +268,5 @@ A edição atual permite alterar tipo, categoria e observação. Data, descriç�
 - [Testes e conferência local](docs/VALIDACAO.md)
 
 ---
-
+Disponibilização de vídeo de apresentação do sistema: https://youtu.be/MKi6YaN11TM
 Desenvolvido como projeto acadêmico para demonstrar importação de dados, persistência local, organização financeira e integração entre frontend e backend.
